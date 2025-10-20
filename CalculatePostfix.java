@@ -1,69 +1,57 @@
-import java.util.ArrayDeque;
 import java.util.Scanner;
 
 public class CalculatePostfix {
 
     /**
-     * 
-     * @param tokens
-     * @return 
+     * Uses postfix calculation as calculator
+     * @param tokens calculation that the user wishes to solve
+     * @return result of the calculation
      */
     public static Double postfixToResult(Queue<Object> tokens) {
         
-        //parsing tokens onto a stack 
-        ArrayDeque<Object> storage = new ArrayDeque<>(); 
-        
-        while(!tokens.isEmpty()) {
-            Object token = tokens.peek(); 
-            storage.push(token);
-            tokens.remove();
-        }
-
-        //New Stack to hold result
+        //New Stack to hold calculations and result
         Stack<Double> calc = new Stack<>();
 
-        //variable to hold result 
-        Double result = 0.0; 
-
         //Calculating the result 
-        while(!storage.isEmpty()) {
-            Object token = storage.peek();
+        while(!tokens.isEmpty()) {
+            Object token = tokens.remove();
             if(token instanceof Double) {
-                calc.push((Double) token);
+                Double num = (Double) token;
+                calc.push(num);
             }
-            if(token instanceof Character) {
-                Double x = (Double) storage.pop();
-                Double y = (Double) storage.pop();
+            else if(token instanceof Character) {
+                Double x = (Double) calc.pop();
+                Double y = (Double) calc.pop();
+                
+                Character op = (Character) token;
 
                 if(x == null || y == null) {
                     throw new IllegalArgumentException("No numbers to operate on. Invalid String.");
                 }
-                else if(token == "*"){
-                    result = x * y; 
-                    calc.push(result); 
+                else if(op == '*'){
+                    calc.push(x * y); 
                 }
-                else if(token == "+"){
-                    result = x + y;
-                    calc.push(result); 
+                else if(op == '+'){
+                    calc.push(x + y); 
                 }
-                else if(token == "-"){
-                    result = x - y;
-                    calc.push(result); 
+                else if(op == '-'){
+                    calc.push(y - x); 
                 }
-                else if (token == "/"){
-                    result = x / y;
-                    calc.push(result); 
+                else if (op == '/'){
+                    calc.push(y / x); 
+                }
+                else if (op == '^') {
+                    calc.push(Math.pow(y, x));
                 }
                 else {
                     throw new RuntimeException(token + " is not a valid symbol.");
                 }
-                x = null;
-                y = null;
+                if(calc.isEmpty()) {
+                    throw new IllegalArgumentException("Not enough numbers to calculate with the operator.");
+                }
             }
-            storage.remove();
         }
-        System.out.println("Result of calculations: \n " + calc.peek().toString());
-        return result;
+        return calc.pop();
     }
     public static void main(String[] args) {
 
@@ -71,9 +59,13 @@ public class CalculatePostfix {
         System.out.println("Enter the calculation you wish to solve: \n");
     
         String calc = input.nextLine();
+
+        //Line to create space
+        System.out.println();
     
         Queue<Object> tokens = Tokenizer.readTokens(calc);
-        System.out.println(postfixToResult(tokens));
+        Double result = postfixToResult(tokens);
+        System.out.println("Result of calculations: \n " + result.toString());
 
         //Close input 
         input.close();
