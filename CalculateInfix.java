@@ -1,39 +1,36 @@
-import java.util.ArrayDeque;
+import java.util.Scanner;
 
 public class CalculateInfix {
-    public static Double infixToPostfix(ArrayDeque<Object> tokens) {
+    public static Double infixToPostfix(Queue<Object> tokens) {
 
-        
         Queue<Object> queue = new Queue<>(); //Numbers
-        ArrayDeque<Object> stack = new ArrayDeque<>(); //Operators
+        Stack<Object> stack = new Stack<>(); //Operators
 
         while(!tokens.isEmpty()) {
-            tokens.remove();
-
-            Object token = tokens.getFirst();
+            Object token = tokens.remove();
             if(token instanceof Double) {
-                queue.add(token);
+                Double num = (Double) token;
+                queue.add(num);
             }
             if(token instanceof Character) {
-                if(isOperator(token)) {
-                    while(stack.size() > 0 && stack.peekLast() instanceof Character && (((precedence(stack.peekLast()) - precedence(token)) == 0) && !isRightAssociative(token) || (precedence(stack.peekLast())-precedence(token))>0)) {
-                        Object obj = stack.removeLast();
-                        queue.add(obj);
+                Character c = (Character) token;
+                if(isOperator(c)) {
+                    while(!stack.isEmpty() && stack.peek() instanceof Character && (((precedence(stack.peek()) - precedence(token)) == 0) && !isRightAssociative(token) || (precedence(stack.peek())-precedence(token))> 0)) {
+                        queue.add(stack.pop());
                     }
                 }
-                else if(token.equals('(')){
-                    stack.push(token);
+                else if(c.equals('(')){
+                    stack.push(c);
                     
                 }
                 else if(token.equals(')')) {
-                    while(!stack.peekLast().equals(')')){
-                        Object obj = stack.removeLast();
-                        queue.add(obj);
+                    while(!stack.peek().equals('(' ) && !stack.isEmpty()){
+                        queue.add(stack.pop());
                         if(stack.isEmpty()){
                             throw new RuntimeException("Mismatched parentheses. Please fix in order to complete your computation.");
                         }
                     }
-                    stack.pop();
+                    stack.pop(); //removes left parentheses 
                 }
             }
         }
@@ -43,8 +40,7 @@ public class CalculateInfix {
                 throw new RuntimeException("Mismatched parentheses. Please fix in order to complete your computation.");
             }
             if(isOperator(stack.peek())){
-                Object obj = stack.pop();
-                queue.add(obj);
+                queue.add(stack.pop());
             }
         }
         
@@ -74,7 +70,7 @@ public class CalculateInfix {
             return 1; 
         }
         else {
-            return -1; //if token is an instance of a Double and not a character
+            return 0; //if token is an instance of a Double and not a character
         }
             
     }
@@ -97,4 +93,20 @@ public class CalculateInfix {
         return token.equals('*') || token.equals('/') || token.equals('+') || token.equals('-');
     }
 
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter the calculation you wish to solve: \n");
+    
+
+        String calc = input.nextLine();
+        Queue<Object> tokens = Tokenizer.readTokens(calc);
+
+
+        Double result = infixToPostfix(tokens);
+        System.out.println("Result of calculations: \n " + result.toString());
+
+        //Close input
+        input.close();
+        
+    }
 }
