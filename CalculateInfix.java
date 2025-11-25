@@ -1,6 +1,13 @@
 import java.util.Scanner;
-
+/**
+ * Class to convert infix to postfix
+ */
 public class CalculateInfix {
+    /**
+     * Convert infix to postfix and calls postfix method to return result
+     * @param tokens numbers and characters to calculate 
+     * @return Double result
+     */
     public static Double infixToPostfix(Queue<Object> tokens) {
 
         Queue<Object> queue = new Queue<>(); //Numbers
@@ -93,6 +100,10 @@ public class CalculateInfix {
         return token.equals('*') || token.equals('/') || token.equals('+') || token.equals('-');
     }
 
+    /** 
+    * main method
+    * @param args list of arguments 
+    */
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter the calculation you wish to solve: \n");
@@ -107,6 +118,5 @@ public class CalculateInfix {
 
         //Close input
         input.close();
-        
     }
 }

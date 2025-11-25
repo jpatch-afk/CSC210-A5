@@ -1,5 +1,8 @@
 import java.util.Scanner;
 
+/**
+ * Class to calculate a result based on user-inputed tokens
+ */
 public class CalculatePostfix {
 
     /**
@@ -53,6 +56,11 @@ public class CalculatePostfix {
         }
         return calc.pop();
     }
+    
+    /** 
+    * main method
+    * @param args list of arguments 
+    */
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
