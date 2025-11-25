@@ -4,14 +4,18 @@ Your readme should include the following information. Each student needs to subm
 
 ## Basic Information
 
-Group Member Name(s):
+Group Member Name(s): N/A
 
-Other collaborators you worked with, including TAs (and feel free to give a shoutout to anyone who was particularly helpful):
+Other collaborators you worked with, including TAs (and feel free to give a shoutout to anyone who was particularly helpful): N/A
 
-Any references used besides JavaDoc and course materials:
+Any references used besides JavaDoc and course materials: N/A
 
 ## Reflection
 
 Reflection on your experience with this assignment:
 
+This assignment was fun! It was interesting to write calculator this way, and learn a unique application of stacks and queues. 
+
 Any questions you still have?
+
+Nope! This was a really cool assignment
