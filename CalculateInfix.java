@@ -16,19 +16,30 @@ public class CalculateInfix {
         while(!tokens.isEmpty()) {
             Object token = tokens.remove();
             if(token instanceof Double) {
-                Double num = (Double) token;
-                queue.add(num);
+                queue.add((Double) token);
             }
             if(token instanceof Character) {
                 Character c = (Character) token;
                 if(isOperator(c)) {
-                    while(!stack.isEmpty() && stack.peek() instanceof Character && (((precedence(stack.peek()) - precedence(token)) == 0) && !isRightAssociative(token) || (precedence(stack.peek())-precedence(token))> 0)) {
-                        queue.add(stack.pop());
+                    while(!stack.isEmpty() && stack.peek() instanceof Character){
+                        Character first = (Character) stack.peek(); 
+
+                        if(isOperator(first)){
+                            if(!isRightAssociative(c) && precedence(first) >= precedence(c)){ //left-associative
+                                queue.add(stack.pop());
+                                continue;
+                            }
+                            else if(isRightAssociative(c) && precedence(first) > precedence(c)){ //right-associative 
+                                queue.add(stack.pop()); 
+                                continue;
+                            }
+                        }
+                        break; //break if no condition matches
                     }
+                    stack.push(c);
                 }
                 else if(c.equals('(')){
-                    stack.push(c);
-                    
+                    stack.push(c);   
                 }
                 else if(token.equals(')')) {
                     while(!stack.peek().equals('(' ) && !stack.isEmpty()){
@@ -43,16 +54,15 @@ public class CalculateInfix {
         }
         
         while(!stack.isEmpty()) {
-            if(stack.peek().equals('(') || stack.peek().equals(')')) {
+            Character c = (Character) stack.pop();
+            if(c.equals('(') || c.equals(')')) {
                 throw new RuntimeException("Mismatched parentheses. Please fix in order to complete your computation.");
             }
-            if(isOperator(stack.peek())){
-                queue.add(stack.pop());
+            if(isOperator(c)){
+                queue.add(c);
             }
-        }
-        
+        }   
         return CalculatePostfix.postfixToResult(queue); //runs the calculations
-
     }
 
     /**
@@ -97,7 +107,7 @@ public class CalculateInfix {
      * @return whether the character is an operator or not 
      */
     public static boolean isOperator(Object token) {
-        return token.equals('*') || token.equals('/') || token.equals('+') || token.equals('-');
+        return token.equals('*') || token.equals('/') || token.equals('+') || token.equals('-') || token.equals('^');
     }
 
     /** 
@@ -114,7 +124,7 @@ public class CalculateInfix {
 
 
         Double result = infixToPostfix(tokens);
-        System.out.println("Result of calculations: \n " + result.toString());
+        System.out.println("Result of calculations: " + result.toString());
 
         //Close input
         input.close();

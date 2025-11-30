@@ -41,13 +41,13 @@ public class CalculatePostfix {
                     calc.push(y - x); 
                 }
                 else if (op == '/'){
-                    calc.push(y / x); 
+                    calc.push(y / x);
                 }
                 else if (op == '^') {
                     calc.push(Math.pow(y, x));
                 }
                 else {
-                    throw new RuntimeException(token + " is not a valid symbol.");
+                    throw new RuntimeException(op + " is not a valid symbol.");
                 }
                 if(calc.isEmpty()) {
                     throw new IllegalArgumentException("Not enough numbers to calculate with the operator.");
@@ -73,7 +73,7 @@ public class CalculatePostfix {
     
         Queue<Object> tokens = Tokenizer.readTokens(calc);
         Double result = postfixToResult(tokens);
-        System.out.println("Result of calculations: \n " + result.toString());
+        System.out.println("Result of calculations: " + result.toString());
 
         //Close input 
         input.close();
